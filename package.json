@@ -2,7 +2,7 @@
   "name": "tensor-ops",
   "version": "0.0.1",
   "description": "tensor operations modeled off numpy and tensorflow",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "clean": "rimraf lib",
     "build": "babel modules --out-dir lib",
