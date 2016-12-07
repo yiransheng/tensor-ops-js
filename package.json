@@ -16,6 +16,10 @@
     "matrix"
   ],
   "author": "Yiran Sheng",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yiransheng/tensor-ops-js"
+  },
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.18.0",
