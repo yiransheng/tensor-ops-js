@@ -6,7 +6,8 @@
   "scripts": {
     "clean": "rimraf lib",
     "build": "babel modules --out-dir lib",
-    "test": "tape -r babel-polyfill -r babel-register './test/*.test.js'"
+    "test": "tape -r babel-polyfill -r babel-register './test/*.test.js'",
+    "prepublish": "npm run clean && npm run build"
   },
   "keywords": [
     "tensor",
@@ -16,9 +17,6 @@
   ],
   "author": "Yiran Sheng",
   "license": "MIT",
-  "peerDependencies": {
-    "lodash": "^4.17.2"
-  },
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-plugin-transform-es3-member-expression-literals": "^6.3.13",
