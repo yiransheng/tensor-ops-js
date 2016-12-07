@@ -1,6 +1,6 @@
 {
   "name": "tensor-ops",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "tensor operations modeled off numpy and tensorflow",
   "main": "lib/index.js",
   "scripts": {
