@@ -75,12 +75,12 @@ export function computeStrides(shape) {
 
 export function flattenArray(a) {
   const output = [];
-  const stack = [a];
-  while (stack.length) {
-    const array = stack.pop();
+  const queue = [a];
+  while (queue.length) {
+    const array = queue.shift();
     for (const item of array) {
       if (Array.isArray(item)) {
-        stack.push(item);
+        queue.push(item);
       } else {
         output.push(item);
       }
