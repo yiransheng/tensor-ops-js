@@ -73,6 +73,22 @@ export function computeStrides(shape) {
   return strides;
 }
 
+export function flattenArray(a) {
+  const output = [];
+  const stack = [a];
+  while (stack.length) {
+    const array = stack.pop();
+    for (const item of array) {
+      if (Array.isArray(item)) {
+        stack.push(item);
+      } else {
+        output.push(item);
+      }
+    }
+  }
+  return output;
+}
+
 export function toArray(val) {
   return Array.isArray(val) ? val : [val];
 }

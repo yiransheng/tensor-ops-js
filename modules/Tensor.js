@@ -1,36 +1,59 @@
 import {
+  throwInvariant,
   product,
   deriveShape,
-  computeStrides
+  computeStrides,
+  flattenArray
 } from './utils';
 
-export default class Tensor {
-  constructor(backingArray, shape, flatten=true) {
-    this._shape = shape;
-    this._rank = this._shape.length;
-    this._size = product(this._shape);
-    this._strides = computeStrides(this._shape);
-    this._backingArray = flatten ? flattenDeep(backingArray) : backingArray;
-  }
-  _getBackingArray() {
-    if (this._backingArray instanceof Tensor) {
-      return this._backingArray._getBackingArray();
-    } else if (Array.isArray(this._backingArray)) {
-      return this._backingArray;
-    }
-  }
-  _reshape(newShape) {
-    return new Tensor(this._backingArray, newShape, false);
-  }
-  _transpose(dims) {
-    // validation here
-    const newShape = dims.map(d => this._shape[d]);
-    return this._reshape(newShape);
-  }
-  _slice(start, end) {
+import Thunk from './Thunk';
 
+class Tensor {
+  constructor(array, shape) {
+    if (array instanceof Tensor) {
+      this._array = array._array;
+    } else if (array instanceof Thunk) {
+      this._array = array;
+    } else if (Array.isArray(array)) {
+      this._array = new Thunk(() => {
+        return flattenArray(array);
+      });
+    } else {
+      throw Error("Invalid Input Backing Array");
+    }
+    this._shape = shape;
+    this._strides = computeStrides(shape);
+  }
+  tolist() {
+    return this._array
+      .map(a => reshape1d(a, this._shape))
+      .valueOf();
   }
   toArray() {
-
+    return this.tolist();
+  }
+  reshape(newShape) {
+    return new Tensor(this, newShape);
   }
 }
+
+function reshape1d(array, shape) {
+  throwInvariant(array.length === product(shape),
+      "Invalid Shape while reshaping 1d array");
+  return _reshape1d(array, 0, array.length, shape);
+}
+function _reshape1d(array, start, len, shape) {
+  if (shape.length === 1) {
+    return array.slice(start, start + len);
+  }
+  const [d, ...rest] = shape;
+  const nextLen = len / d;
+  const newArray = [];
+  for (let i=0; i<d; i++) {
+    newArray.push(
+      _reshape1d(array, start + i * nextLen, nextLen, rest));
+  }
+  return newArray;
+}
+
+export default Tensor;
