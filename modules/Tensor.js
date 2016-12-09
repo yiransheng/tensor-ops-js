@@ -50,6 +50,10 @@ class Tensor {
     const newTensor = new Tensor(this, newShape, newStrides);
     return newTensor;
   }
+  slice(start, size) {
+    
+    return new Tensor(array, size);
+  }
 }
 
 function reshape1d(array, shape, strides) {
@@ -75,6 +79,7 @@ function _reshape1d(array, start, strides, shape) {
   return newArray;
 }
 function _checkTransposeDims(dims) {
+  // check if dims is a permutation of range(dims.length)
   let prev = -1;
   for (let i=0; i<dims.length; i++) {
     const d = dims[i];
