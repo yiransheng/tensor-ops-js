@@ -88,6 +88,18 @@ export function flattenArray(a) {
   }
   return output;
 }
+export function slice1d(array, start, len, stride) {
+  if (!stride || stride === 1) {
+    return array.slice(start, start + len);
+  } else if (stride > 0) {
+    const output = [];
+    const end = start + len * stride;
+    for (let i=start; i < end; i += stride) {
+      output.push(array[i]);
+    }
+    return output;
+  }
+}
 
 export function toArray(val) {
   return Array.isArray(val) ? val : [val];
