@@ -48,7 +48,7 @@ export function tensor(array) {
   throwInvariant(false, "Tensors can be only made from arrays");
 }
 
-function deriveShape(array) {
+export function deriveShape(array) {
   if (!Array.isArray(array)) {
     return []; // a scalar
   }
@@ -60,6 +60,17 @@ function deriveShape(array) {
   } else {
     return [0];
   }
+}
+
+export function computeStrides(shape) {
+  const len = shape.length;
+  const strides = new Array(len);
+  let step = 1;
+  for (let i=0; i<len; i++) {
+    strides[len - i - 1] = step;
+    step *= shape[len - i - 1];
+  }
+  return strides;
 }
 
 export function toArray(val) {
