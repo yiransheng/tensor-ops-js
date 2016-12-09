@@ -19,7 +19,7 @@ test("array flatten function", t => {
   }
 
   const result = flattenArray(randomArray());
-  t.ok(isFlatten(result), "Result array is not flat");
+  t.ok(isFlatten(result), "Result array is flat");
 
   const input1 = [[[[[1,2,3], [4,5,6]]]]];
   const output1 = flattenArray(input1);
