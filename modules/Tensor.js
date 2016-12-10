@@ -47,6 +47,15 @@ class Tensor {
       return new Tensor(this, newShape);
     }
   }
+  slice(start, size) {
+    let istart = 0;
+    for (let i=0; i<start.length; i++) {
+      istart += start[i] * this._strides[i];
+    }
+    const thunk = this._array
+      .map(a => _flatten(a, istart, this._strides, size))
+    return new Tensor(thunk, size);
+  }
   transpose(dims) {
     if (this._shape.length < 2) {
       return this;
