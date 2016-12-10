@@ -58,11 +58,6 @@ test("Tensor transpose", t=> {
       [10, 22],
       [11, 23]]];
 
-  console.log(
-    tensor.slice([1, 1], [2, 3])
-      .tolist()
-  )
-
   t.deepEqual(tensor.transpose().tolist(), output);
   t.deepEqual(
     tensor
