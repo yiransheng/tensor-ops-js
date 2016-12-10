@@ -27,14 +27,25 @@ class Tensor {
   }
   tolist() {
     return this._array
-      .map(a => reshape1d(a, this._shape, this._strides))
+      .map(a => reshape1d(a, this._strides, this._shape))
       .valueOf();
   }
   toArray() {
     return this.tolist();
   }
+  flatten() {
+    const thunk = this._array
+      .map(a => flatten(a, this._strides, this._shape));
+    return new Tensor(thunk, [product(this._shape)]);
+  }
   reshape(newShape) {
-    return new Tensor(this, newShape);
+    if (this._isTransposed()) {
+      const thunk = this._array.map(
+          a => flatten(a, this._strides, this._shape));
+      return new Tensor(thunk, newShape);
+    } else {
+      return new Tensor(this, newShape);
+    }
   }
   transpose(dims) {
     if (this._shape.length < 2) {
@@ -50,13 +61,38 @@ class Tensor {
     const newTensor = new Tensor(this, newShape, newStrides);
     return newTensor;
   }
-  slice(start, size) {
-    
-    return new Tensor(array, size);
+  _isTransposed() {
+    let prev = Infinity;
+    for (let i=0; i<this._strides.length; i++) {
+      if (prev < this._strides[i]) {
+        return true;
+      }
+      prev = this._strides[i];
+    }
+    return false;
   }
 }
 
-function reshape1d(array, shape, strides) {
+function flatten(array, strides, shape) {
+  return _flatten(array, 0, strides, shape);
+}
+
+function _flatten(array, start, strides, shape) {
+  if (shape.length === 1) {
+    return slice1d(array, start, shape[0], strides[0]);
+  }
+  const size = product(shape);
+  const [d, ...restShape] = shape;
+  const [stride, ...restStrides] = strides;
+  const newArray = [];
+  for (let i=0; i<d; i++) {
+    newArray.push(
+      _flatten(array, start + i * stride, restStrides, restShape));
+  }
+  return [].concat(...newArray);
+}
+
+function reshape1d(array, strides, shape) {
   throwInvariant(array.length === product(shape),
       "Invalid Shape while reshaping 1d array");
   if (!array.length) {

@@ -60,7 +60,8 @@ test("Tensor transpose", t=> {
 
   console.log(tensor.reshape([3, 8])
       .transpose()
-      .reshape([4, 6]).tolist())
+      .reshape([8, 3])
+      .tolist());
 
   t.deepEqual(tensor.transpose().tolist(), output);
   t.deepEqual(
