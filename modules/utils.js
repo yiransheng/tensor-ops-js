@@ -104,7 +104,7 @@ export function slice1d(array, start, len, stride) {
 export function range(start, end, step) {
   throwInvariant(step > 0 || step < 0, 
       "(range), step needs to be a number, and cannot be 0");
-  throwInvariant((end >= start) === (step > 0), "Infinity loop detected");
+  throwInvariant((end >= start) === (step > 0), "Infinite loop detected");
   const output = [];
   const f = step < 0 ? -1 : 1;
   for (let i=start; (f * i) < (f * end); i+=step) {
