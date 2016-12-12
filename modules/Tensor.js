@@ -4,6 +4,7 @@ import {
   deriveShape,
   computeStrides,
   flattenArray,
+  range,
   slice1d
 } from './utils';
 
@@ -69,6 +70,38 @@ class Tensor {
     const newStrides = dims.map(d => this._strides[d]);
     const newTensor = new Tensor(this, newShape, newStrides);
     return newTensor;
+  }
+  reduceAlongAxis(axis, func, zero) {
+    const newShape = this._shape.filter((s, i) => i !== axis);
+    const axisLen = this._shape[axis];
+    const nSlices = product(this._shape) / axisLen;
+    const stride = this._strides[axis];
+    const step = this._strides[this._strides.length-1];
+    const thunk = this._array.map(a => {
+      let istart = 0;
+      let output = [];
+      for (let s=0; s<nSlices; s++) {
+        let index = istart;
+        let acc = zero;
+        let val;
+        for (let i=0; i<axisLen; i++) {
+          val = a[index];
+          acc = func(acc, val);
+          index = index + stride; 
+        }
+        output.push(acc);
+        istart = istart + step;
+      }
+      return output;
+    });
+    return new Tensor(thunk, newShape);
+  }
+  _getArray() {
+    if (this._isTransposed()) {
+      return this.flatten()._array;
+    } else {
+      return this._array;
+    }
   }
   _isTransposed() {
     let prev = Infinity;

@@ -101,6 +101,14 @@ export function slice1d(array, start, len, stride) {
   }
 }
 
+export function range(start, end, step) {
+  const output = [];
+  for (let i=start; i<end; i+=step) {
+    output.push(i);
+  }
+  return output;
+}
+
 export function toArray(val) {
   return Array.isArray(val) ? val : [val];
 }
