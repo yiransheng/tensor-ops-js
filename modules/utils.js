@@ -101,7 +101,7 @@ export function slice1d(array, start, len, stride) {
   }
 }
 
-export function range(start, end, step) {
+export function range(start, end, step=1) {
   throwInvariant(step > 0 || step < 0, 
       "(range), step needs to be a number, and cannot be 0");
   throwInvariant((end >= start) === (step > 0), "Infinite loop detected");
