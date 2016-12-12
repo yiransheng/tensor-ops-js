@@ -58,18 +58,25 @@ class Tensor {
     return new Tensor(thunk, size);
   }
   transpose(dims) {
-    if (this._shape.length < 2) {
-      return this;
+    if (!dims) {
+      dims = range(0, this._shape.length, 1);
+      dims.reverse();
     }
-    if (this._shape.length === 2 && !dims) {
-      dims = [1, 0];
-    } 
     throwInvariant(_checkTransposeDims(dims),
         "Invalid transpose dimensions");
     const newShape  = dims.map(d => this._shape[d]);
     const newStrides = dims.map(d => this._strides[d]);
     const newTensor = new Tensor(this, newShape, newStrides);
     return newTensor;
+  }
+  reduceSum({axis}={}) {
+    if (axis >=0 && axis < this._shape.length) {
+      return this.reduceAlongAxis(axis, (a,b)=>a+b, 0);
+    } else {
+      return this._array
+        .map(a =>a.reduce((a,b)=>a+b, 0))
+        .valueOf();
+    }
   }
   reduceAlongAxis(axis, func, zero) {
     const newShape = this._shape.filter((s, i) => i !== axis);
