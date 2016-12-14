@@ -4,10 +4,14 @@
   "description": "tensor operations modeled off numpy and tensorflow",
   "main": "lib/index.js",
   "scripts": {
-    "clean": "rimraf lib",
-    "build": "babel modules --out-dir lib",
+    "clean": "rimraf lib target-typescript",
     "test": "tape -r babel-polyfill -r babel-register './test/*.test.js'",
-    "prepublish": "npm run clean && npm run build"
+    "prepublish": "npm run clean && npm run build",
+
+    "compileTypescript": "mkdir -p ./target-typescript && tsc",
+    "build": "babel target-typescript --out-dir lib",
+    "tslint": "tslint --exclude 'node_modules/**' '**/*.ts'",
+    "compile": "npm run clean && npm run compileTypescript"
   },
   "keywords": [
     "tensor",

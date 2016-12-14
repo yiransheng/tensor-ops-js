@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es6",
+        "declaration": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "noImplicitThis": true,
+        "noImplicitReturns": true,
+        "sourceMap": true,
+        "inlineSources": true,
+        "outDir": "./target-typescript",
+        "lib": [
+            "es2015"
+        ]
+    },
+    "files": [
+        "./src/example.ts"
+    ]
+}
