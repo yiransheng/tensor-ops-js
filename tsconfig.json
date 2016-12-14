@@ -15,6 +15,6 @@
         ]
     },
     "files": [
-        "./src/example.ts"
+        "./modules/*.ts"
     ]
 }
