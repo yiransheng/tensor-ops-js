@@ -1,6 +1,7 @@
 import {range} from 'lodash';
 import test from 'tape';
-import Tensor from '../modules/Tensor';
+import Tensor from '../lib-es2015/Tensor';
+import Thunk from '../lib-es2015/Thunk';
 
 test("Tensor reshape", t => {
   t.plan(2);
@@ -19,7 +20,7 @@ test("Tensor reshape", t => {
     [[ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11],
      [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]];
 
-  const tensor = new Tensor(input, [24]);
+  const tensor = new Tensor(Thunk.of(input), [24]);
 
   t.deepEqual(tensor.reshape([2, 3, 4]).tolist(), output1);
   t.deepEqual(tensor.reshape([2,   12]).tolist(), output2);
@@ -31,7 +32,7 @@ test("Tensor transpose", t=> {
   t.plan(2);
 
   const input = range(24);
-  const tensor = new Tensor(input, [4, 6]);
+  const tensor = new Tensor(Thunk.of(input), [4, 6]);
 
   const output = 
     [[ 0,  6, 12, 18],
