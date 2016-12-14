@@ -44,13 +44,7 @@ class Tensor<T> {
     return new Tensor(thunk, shape);
   }
   reshape(newShape:Shape):Tensor<T> {
-    if (this._isTransposed()) {
-      const thunk = this._array.map(
-          a => flatten(a, this._strides, this._shape));
-      return new Tensor(thunk, newShape);
-    } else {
-      return new Tensor(this, newShape);
-    }
+    return new Tensor(this._getArray(), newShape);
   }
   slice(start:Shape, size:Shape):Tensor<T> {
     let istart = 0;
