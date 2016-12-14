@@ -4,7 +4,7 @@ declare class Tensor<T> {
     readonly _array: Thunk<T[]>;
     readonly _shape: Shape;
     readonly _strides: Shape;
-    constructor(array: Tensor<T> | Thunk<T[]> | DeepArray<T>, shape: Shape, strides?: Shape);
+    constructor(array: Tensor<T> | Thunk<T[]>, shape: Shape, strides?: Shape);
     tolist(): DeepArray<T>;
     toArray(): DeepArray<T>;
     flatten(): Tensor<T>;

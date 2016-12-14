@@ -23,3 +23,5 @@ export function reshape <T>(array: DeepArray<T>, shape:Shape): DeepArray<T> {
 export function transpose <T>(array: DeepArray<T>, dims?:Shape): DeepArray<T> {
   return tensor(array).transpose(dims).tolist();
 }
+
+export default Tensor;
