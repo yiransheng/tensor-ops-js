@@ -30,7 +30,7 @@ function _shapeEqual(a:Shape, b:Shape) {
   }
 }
 
-export function deriveShape(array:DeepArray<any>): Shape {
+export function deriveShape<T>(array:DeepArray<T>): Shape {
   if (!Array.isArray(array)) {
     return []; // a scalar
   }

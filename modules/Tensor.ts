@@ -18,15 +18,11 @@ class Tensor<T> {
   readonly _shape: Shape;
   readonly _strides: Shape;
 
-  constructor(array: Tensor<T> | Thunk<T[]> | DeepArray<T>, shape:Shape, strides?:Shape) {
+  constructor(array: Tensor<T> | Thunk<T[]>, shape:Shape, strides?:Shape) {
     if (array instanceof Tensor) {
       this._array = array._array;
     } else if (array instanceof Thunk) {
       this._array = array;
-    } else if (Array.isArray(array)) {
-      this._array = new Thunk(() => {
-        return flattenArray(array);
-      });
     } else {
       throw Error("Invalid Input Backing Array");
     }
