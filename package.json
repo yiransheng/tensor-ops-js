@@ -10,8 +10,7 @@
     "prepublish": "npm run clean && npm run build",
 
     "compileTypescript": "mkdir -p ./lib-es2015 && tsc",
-    "tslint": "tslint --exclude 'node_modules/**' 'modules/*.ts'",
-    "build": "npm run clean && npm run compileTypescript && babel lib-es2015 --out-dir lib"
+    "build": "npm run compileTypescript && babel lib-es2015 --out-dir lib"
   },
   "keywords": [
     "tensor",
