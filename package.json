@@ -9,9 +9,9 @@
     "prepublish": "npm run clean && npm run build",
 
     "compileTypescript": "mkdir -p ./target-typescript && tsc",
-    "build": "babel target-typescript --out-dir lib",
     "tslint": "tslint --exclude 'node_modules/**' '**/*.ts'",
-    "compile": "npm run clean && npm run compileTypescript"
+    "compile": "npm run clean && npm run compileTypescript",
+    "build": "npm run compile && babel target-typescript --out-dir lib"
   },
   "keywords": [
     "tensor",
