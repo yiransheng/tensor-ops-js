@@ -18,7 +18,7 @@ class Tensor<T> {
   readonly _shape: Shape;
   readonly _strides: Shape;
 
-  constructor(array: Tensor<T> | Thunk<T[]> | DeepArray<T>, shape:Shape, strides:Shape) {
+  constructor(array: Tensor<T> | Thunk<T[]> | DeepArray<T>, shape:Shape, strides?:Shape) {
     if (array instanceof Tensor) {
       this._array = array._array;
     } else if (array instanceof Thunk) {
@@ -41,12 +41,13 @@ class Tensor<T> {
   toArray() {
     return this.tolist();
   }
-  flatten() {
-    const thunk = this._array
+  flatten():Tensor<T> {
+    const thunk:Thunk<T[]> = this._array
       .map(a => flatten(a, this._strides, this._shape));
-    return new Tensor(thunk, [product(this._shape)]);
+    const shape:Shape = [product(this._shape)];
+    return new Tensor(thunk, shape);
   }
-  reshape(newShape) {
+  reshape(newShape:Shape):Tensor<T> {
     if (this._isTransposed()) {
       const thunk = this._array.map(
           a => flatten(a, this._strides, this._shape));
@@ -55,7 +56,7 @@ class Tensor<T> {
       return new Tensor(this, newShape);
     }
   }
-  slice(start, size) {
+  slice(start:Shape, size:Shape):Tensor<T> {
     let istart = 0;
     for (let i=0; i<start.length; i++) {
       istart += start[i] * this._strides[i];
@@ -64,7 +65,7 @@ class Tensor<T> {
       .map(a => _flatten(a, istart, this._strides, size))
     return new Tensor(thunk, size);
   }
-  transpose(dims) {
+  transpose(dims?:Shape):Tensor<T> {
     if (!dims) {
       dims = range(0, this._shape.length, 1);
       dims.reverse();
@@ -76,16 +77,7 @@ class Tensor<T> {
     const newTensor = new Tensor(this, newShape, newStrides);
     return newTensor;
   }
-  reduceSum({axis}={}) {
-    if (axis >=0 && axis < this._shape.length) {
-      return this.reduceAlongAxis(axis, (a,b)=>a+b, 0);
-    } else {
-      return this._array
-        .map(a =>a.reduce((a,b)=>a+b, 0))
-        .valueOf();
-    }
-  }
-  reduceAlongAxis(axis, func, zero) {
+  reduceAlongAxis<U>(axis:number, func: (a:U, b:T)=>U, zero:U) {
     const newShape = this._shape.filter((s, i) => i !== axis);
     const axisLen = this._shape[axis];
     const nSlices = product(this._shape) / axisLen;
@@ -93,11 +85,11 @@ class Tensor<T> {
     const step = this._strides[this._strides.length-1];
     const thunk = this._array.map(a => {
       let istart = 0;
-      let output = [];
+      let output:U[] = [];
       for (let s=0; s<nSlices; s++) {
         let index = istart;
         let acc = zero;
-        let val;
+        let val:T;
         for (let i=0; i<axisLen; i++) {
           val = a[index];
           acc = func(acc, val);
@@ -110,14 +102,14 @@ class Tensor<T> {
     });
     return new Tensor(thunk, newShape);
   }
-  _getArray() {
+  _getArray():Thunk<T[]> {
     if (this._isTransposed()) {
       return this.flatten()._array;
     } else {
       return this._array;
     }
   }
-  _isTransposed() {
+  _isTransposed():boolean {
     let prev = Infinity;
     for (let i=0; i<this._strides.length; i++) {
       if (prev < this._strides[i]) {
@@ -129,23 +121,24 @@ class Tensor<T> {
   }
 }
 
-function flatten(array, strides, shape) {
+function flatten<T>(array:T[], strides:Shape, shape:Shape):T[] {
   return _flatten(array, 0, strides, shape);
 }
 
-function _flatten(array, start, strides, shape) {
+function _flatten<T>(array:T[], start:number, strides:Shape, shape:Shape):T[] {
   if (shape.length === 1) {
     return slice1d(array, start, shape[0], strides[0]);
   }
   const size = product(shape);
   const [d, ...restShape] = shape;
   const [stride, ...restStrides] = strides;
-  const newArray = [];
+  const newArray:T[][] = [];
   for (let i=0; i<d; i++) {
     newArray.push(
       _flatten(array, start + i * stride, restStrides, restShape));
   }
-  return [].concat(...newArray);
+  const empty: T[] = [];
+  return empty.concat(...newArray);
 }
 
 function reshape1d<T>(array:T[], strides:Shape, shape:Shape):DeepArray<T> {
@@ -170,7 +163,7 @@ function _reshape1d<T>(array:T[], start:number, strides:Shape, shape:Shape):Deep
   }
   return newArray;
 }
-function _checkTransposeDims(dims) {
+function _checkTransposeDims(dims:Shape):boolean {
   // check if dims is a permutation of range(dims.length)
   let prev = -1;
   for (let i=0; i<dims.length; i++) {
