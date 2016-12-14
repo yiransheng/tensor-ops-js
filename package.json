@@ -1,6 +1,6 @@
 {
   "name": "tensor-ops",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "tensor operations modeled off numpy and tensorflow",
   "main": "lib/index.js",
   "jsnext:main": "lib-es2015/index.js",
@@ -8,7 +8,6 @@
     "clean": "rimraf lib lib-es2015",
     "test": "tape -r babel-polyfill -r babel-register './test/*.test.js'",
     "prepublish": "npm run clean && npm run build",
-
     "compileTypescript": "mkdir -p ./lib-es2015 && tsc",
     "build": "npm run compileTypescript && babel lib-es2015 --out-dir lib"
   },
