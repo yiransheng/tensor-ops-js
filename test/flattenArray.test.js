@@ -1,6 +1,6 @@
 import {range, isNumber, every} from 'lodash';
 import test from 'tape';
-import {flattenArray} from '../modules/utils';
+import {flattenArray} from '../lib/utils';
 
 function randomArray(prob=0.5) {
   const n = Math.floor(Math.random() * 5);

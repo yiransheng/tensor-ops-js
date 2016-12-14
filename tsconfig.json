@@ -9,7 +9,7 @@
         "noImplicitReturns": true,
         "sourceMap": true,
         "inlineSources": true,
-        "outDir": "./target-typescript",
+        "outDir": "./lib-es2015",
         "lib": [
             "es2015"
         ]

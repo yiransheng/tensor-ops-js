@@ -3,15 +3,15 @@
   "version": "0.0.2",
   "description": "tensor operations modeled off numpy and tensorflow",
   "main": "lib/index.js",
+  "jsnext:main": "lib-es2015/index.js",
   "scripts": {
-    "clean": "rimraf lib target-typescript",
+    "clean": "rimraf lib lib-es2015",
     "test": "tape -r babel-polyfill -r babel-register './test/*.test.js'",
     "prepublish": "npm run clean && npm run build",
 
-    "compileTypescript": "mkdir -p ./target-typescript && tsc",
-    "tslint": "tslint --exclude 'node_modules/**' '**/*.ts'",
-    "compile": "npm run clean && npm run compileTypescript",
-    "build": "npm run compile && babel target-typescript --out-dir lib"
+    "compileTypescript": "mkdir -p ./lib-es2015 && tsc",
+    "tslint": "tslint --exclude 'node_modules/**' 'modules/*.ts'",
+    "build": "npm run clean && npm run compileTypescript && babel lib-es2015 --out-dir lib"
   },
   "keywords": [
     "tensor",
